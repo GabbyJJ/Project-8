@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // An associative array is an array with string keys rather than numeric keys.
     }
   }
   Book.init(
@@ -32,7 +32,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-
       genre: DataTypes.STRING,
       year: DataTypes.INTEGER,
     },

@@ -1,10 +1,9 @@
-extends books 
-
-block content
-  form(action=`/books/${book.id}` method="post") 
-  if errors 
-      h2.error Oooops! 
-       ul.error
-           each error in errors 
-               li= error.message
-p Sorry! There was an unexpected error on the server.
+doctype html
+html
+  head
+    title Page Not Found
+    link(rel='stylesheet' href='../public/stylesheets/style.css')
+  body
+    h1 Server Error
+    p Sorry! There was an unexpected error on the server.
+    p=message 

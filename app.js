@@ -9,6 +9,7 @@ var usersRouter = require("./routes/users");
 const { sequelize } = require("./models/index");
 var app = express();
 
+// Method to asynchronously connect to the database and test connection
 sequelize.authenticate().then(() => {
   console.log("Connection has been established successfully.");
 });

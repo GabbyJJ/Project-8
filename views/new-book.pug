@@ -5,7 +5,12 @@ html
     link(rel='stylesheet' href='../public/stylesheets/style.css')
   body
     h1 New Book
-    form
+    form(action=`/books/new` method="POST") 
+      if errors 
+         h2.error Oooops! 
+          ul.error
+            each error in errors 
+                 li= error.message
       p
         label(for='title') Title
         input#title(name='title' type='text')
@@ -21,4 +26,4 @@ html
       p
         input(type='submit' value='Create New Book')
       p
-        a.button(href='all_books.html') Cancel
+        a.button(href='/books') Cancel
