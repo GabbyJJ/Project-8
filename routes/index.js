@@ -1,5 +1,4 @@
 var express = require("express");
-const { request, response, render } = require("../app");
 var router = express.Router();
 var { Book } = require("../models");
 
@@ -8,14 +7,13 @@ router.get("/", function (req, res, next) {
   res.redirect("/books");
 });
 
-router.get("/books", function (req, res, next) {
+router.get("/books", function async(req, res, next) {
   Book.findAll()
     .then((books) => {
-      res.render("books", { books });
+      res.render("books", { books: books });
     })
     .catch((error) => {
-      console.log(error);
-      next();
+      console.log("Error", error), next();
     });
 });
 router.get("/books/new", function (req, res, next) {
@@ -29,7 +27,6 @@ router.post("/books/new", function (req, res, next) {
     year: req.body.year,
   })
     .then((book) => {
-      console.log(book);
       res.redirect("/books");
     })
     .catch((error) => {
@@ -39,10 +36,12 @@ router.post("/books/new", function (req, res, next) {
 });
 //This router is to request the book by id. If the page cannot be found the user will get redirected to a page not found.
 router.get("/books/:id", function (req, res, next) {
-  Book.findAll({ where: { id: req.params.id } })
-    .then((book) => {
-      if (book.length) {
-        res.render("update-book", { book: book[0] });
+  //Book.findAll({ where: { id: req.params.id } })
+  Book.findByPk(req.params.id)
+    .then(function (book) {
+      console.log(book);
+      if (book) {
+        res.render("update-book", { book: book, title: book.title });
       } else {
         res.render("page-not-found");
       }
@@ -54,7 +53,7 @@ router.get("/books/:id", function (req, res, next) {
 // This router allows you to update the book and then catch the errors.
 router.post("/books/:id", function (req, res, next) {
   Book.findByPk(req.params.id)
-    .then((book) => {
+    .then(function (book) {
       book
         .update({
           title: req.body.title,
@@ -70,7 +69,7 @@ router.post("/books/:id", function (req, res, next) {
         });
     })
     .catch((error) => {
-      console.log(error);
+      console.log("PK ERR: ", error);
       next();
     });
 });
@@ -78,18 +77,12 @@ router.post("/books/:id", function (req, res, next) {
 router.post("/books/:id/delete", function (req, res, next) {
   Book.findByPk(req.params.id)
     .then((book) => {
-      book
-        .destroy()
-        .then(() => {
-          res.redirect("/books");
-        })
-        .catch((error) => {
-          console.log(error);
-          next();
-        });
+      return book.destroy();
+    })
+    .then(() => {
+      res.redirect("/books");
     })
     .catch((error) => {
-      console.log(error);
       next();
     });
 });

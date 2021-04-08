@@ -10,19 +10,22 @@ const { sequelize } = require("./models/index");
 var app = express();
 
 // Method to asynchronously connect to the database and test connection
-sequelize.authenticate().then(() => {
-  console.log("Connection has been established successfully.");
-});
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connection has been established successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to the database:", err);
+  });
+
 sequelize
   .sync()
   .then(() => {
-    console.log("Databases have synced");
+    console.log(`Databases and Tables have synced`);
   })
   .catch((error) => {
-    console.log("Data Tables Synced");
-  })
-  .catch((error) => {
-    console.log(error);
+    console.log(`There has been an error syncing the database: ${error}`);
   });
 
 // view engine setup
