@@ -36,17 +36,12 @@ router.post("/books/new", function (req, res, next) {
 });
 //This router is to request the book by id. If the page cannot be found the user will get redirected to a page not found.
 router.get("/books/:id", function (req, res, next) {
-  //Book.findAll({ where: { id: req.params.id } })
-  Book.findByPk(req.params.id)
-    .then(function (book) {
-      console.log(book);
-      if (book) {
-        res.render("update-book", { book: book, title: book.title });
-      } else {
-        res.render("page-not-found");
-      }
+  Book.findOne({ where: { id: req.params.id } })
+    .then((book) => {
+      res.render("update-book", { book: book, title: book.title });
     })
     .catch((error) => {
+      console.log(error);
       next();
     });
 });
